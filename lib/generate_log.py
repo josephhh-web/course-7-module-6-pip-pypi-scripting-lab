@@ -7,9 +7,12 @@ def generate_log(data):
 
     filename = f"log_{datetime.now().strftime('%Y%m%d')}.txt"
 
+    content = "\n".join(str(entry) for entry in data)
+    if data:
+        content += "\n"
+
     with open(filename, "w") as file:
-        for entry in data:
-            file.write(f"{entry}\n")
+        file.write(content)
 
     print(f"Log written to {filename}")
 
@@ -22,7 +25,9 @@ if __name__ == "__main__":
 
     try:
         with urlopen("https://jsonplaceholder.typicode.com/posts/1") as response:
-            title = json.load(response).get("title", "No title found")
+            title = json.loads(response.read().decode("utf-8")).get(
+                "title", "No title found"
+            )
     except Exception:
         title = "No title found"
 
